@@ -26,9 +26,9 @@ pipeline {
                     snykSecurity failOnIssues: false, snykInstallation: "${SNYK_TOOL}", snykTokenId: "${SNYK_TOKEN_ID}"
                     withCredentials([string(credentialsId: "${MOBSF_TOKEN_ID}", variable: "MOBSF_TOKEN")]){
                         sh '''
-                            hash=$(curl -F 'file=@app/build/outputs/apk/release/app-release-unsigned.apk' http://${MOBSF_HOST}/api/v1/upload -H "Authorization:${MOBSF_TOKEN}" | grep -o -e "[0-9a-f]\\{32\\}")
-                            curl -X POST --url http://${MOBSF_HOST}/api/v1/scan --data "hash=${hash}" -H "Authorization:${MOBSF_TOKEN}"
-                            curl -X POST --url http://${MOBSF_HOST}/api/download_pdf --data "hash=${hash}" -H "Authorization:${MOBSF_TOKEN}" -o mobsf_report_${BUILD_NUMBER}.pdf
+                            hash=$(curl -F 'file=@app/build/outputs/apk/release/app-release-unsigned.apk' ${MOBSF_URL}/api/v1/upload -H "Authorization:${MOBSF_TOKEN}" | grep -o -e "[0-9a-f]\\{32\\}")
+                            curl -X POST --url ${MOBSF_URL}/api/v1/scan --data "hash=${hash}" -H "Authorization:${MOBSF_TOKEN}"
+                            curl -X POST --url ${MOBSF_URL}/api/download_pdf --data "hash=${hash}" -H "Authorization:${MOBSF_TOKEN}" -o mobsf_report_${BUILD_NUMBER}.pdf
                         '''
                         
                     }
